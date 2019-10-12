@@ -1,0 +1,27 @@
+{
+	"name": "Mystiar Gateway",
+	"version": "0.1.0",
+	"main": "index.js",
+	"license": "MIT",
+	"scripts": {
+		"dev": "cross-env NODE_ENV=development nodemon index.js",
+		"start": "cross-env NODE_ENV=production node index.js"
+	},
+	"dependencies": {
+		"apollo-datasource-rest": "^0.6.5",
+		"apollo-server-cache-memcached": "^0.6.3",
+		"apollo-server-caching": "^0.5.0",
+		"apollo-server-express": "^2.9.6",
+		"apollo-server-plugin-response-cache": "^0.3.5",
+		"compression": "^1.7.4",
+		"cors": "^2.8.5",
+		"express": "^4.17.1",
+		"express-queue": "^0.0.12",
+		"graphql": "^14.5.8"
+	},
+	"devDependencies": {
+		"cross-env": "^6.0.3",
+		"dotenv": "^8.1.0",
+		"nodemon": "^1.19.3"
+	}
+}

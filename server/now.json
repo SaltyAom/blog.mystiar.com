@@ -1,0 +1,36 @@
+{
+    "version": 2,
+    "name": "Mystiar Gateway",
+    "alias": "cdn.blog.mystiar.com",
+    "builds": [
+        { 
+            "src": "index.js", 
+            "use": "@now/node-server"
+        }
+    ],
+    "build": {
+        "env": {
+            "spaceID": "@spaceid",
+            "accessToken": "@accesstoken"
+        }
+    },
+    "env": {
+        "spaceID": "@spaceid",
+        "accessToken": "@accesstoken"
+    },
+    "routes": [
+        {
+            "src":"/.*",
+            "headers": { 
+                "Access-Control-Allow-Origin": "*",
+                "Access-Control-Allow-Methods": "GET",
+                "Access-Control-Allow-Headers": "X-Requested-With, Content-Type, Accept",
+                "x-now-cache": "HIT",
+                "cache-control": "max-age=31536000,public",
+                "Accept-Encoding": "br",
+                "Service-Worker-Allowed": "/"
+            } 
+        }
+    ],
+    "regions": ["all"]
+}
