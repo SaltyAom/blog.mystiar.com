@@ -1,0 +1,456 @@
+#story, .article, #story-data
+    position relative
+    display flex
+    flex-direction column
+    justify-content flex-start
+    align-items flex-start
+    width var(--story-width)
+    margin 0 auto
+
+#story
+    & > .article
+        position relative
+
+        & > .thumbnail
+            position relative
+            display block
+            width 100%
+            height auto
+            margin 0 auto
+            padding 0
+            background-color var(--preload)
+            overflow hidden
+
+            &.preload
+                height 32.5vh
+                min-height 250px
+
+            & > .image
+                display block
+                width 100%
+                min-height 280px
+                border-radius inherit
+                object-fit cover
+                object-position center
+                cursor zoom-in
+
+            & > .thumbnail-edge
+                position absolute
+                bottom 0
+                width 100%
+                height 16px
+                border-top-left-radius 20px
+                border-top-right-radius 20px
+                box-shadow 0 -5px 2px alpha(#000, .2)
+                background-color: var(--background)
+
+#story-title, #story-title-large
+    position relative
+    z-index 1
+    display block
+    width var(--story-width)
+    margin 0 auto
+    padding 10px 5% 30px 5%
+    background-color var(--background)
+
+    & > .title
+        display block
+        color var(--primary-text)
+        font-weight bold
+        font-size 32px
+        margin 0
+
+        &.preload
+            width 100%
+            height 36px
+            background-color var(--preload)
+            border-radius 4px
+
+    & > .detail
+        display block
+        color var(--tertiary-text)
+        font-weight normal
+        font-size 16px
+        margin 15px 0 0 0
+
+        & > .preload
+            display inline-block
+            width 20%
+            max-width 80px
+            height 24px
+            margin-right 10px
+            background-color var(--preload)
+            border-radius 4px
+
+        & > .inline-editor
+            color var(--secondary-text)
+            text-decoration none
+            margin 0
+            padding 1px 3px
+            border-radius 4px
+            transition background-color .2s ease-out
+
+            &.preload
+                width 40%
+                max-width 160px
+                margin-right 10px
+                transition unset
+
+            &:hover,
+            &:focus
+                background-color var(--preload)
+
+#story-title-large
+    display none
+
+#story-data
+    margin-bottom 50px
+    padding 0 5%
+    background-color var(--background)
+
+    & > .preload
+        width 100%
+        height 21px
+        margin 10px 0 5px 0
+        border-radius 4px
+        background-color var(--preload)
+
+        &.half
+            width 50%
+
+.story-figure
+    display block
+    width 100%
+    margin 15px 0
+    border-radius 5px
+
+    & > .story-image
+        display block
+        width 100%
+        border-radius inherit
+        cursor zoom-in
+
+        &.lazy-load-image
+            padding-top 32.5%
+            background-color var(--preload)
+
+.story-detail
+    color var(--secondary-text)
+    font-size 19px
+    margin 10px 0
+    line-height 1.6em
+
+.story-heading-2
+    display block
+    width 100%
+    word-wrap: break-word
+    color var(--primary-text)
+    font-size 36px
+    margin 20px 0 10px 0
+
+.story-heading-3
+    display block
+    width 100%
+    word-wrap: break-word
+    color var(--primary-text)
+    font-size 32px
+    margin 20px 0 10px 0
+    font-family: "Product Sans", sans-serif;
+
+.story-unordered-list,
+.story-ordered-list
+    margin 0 0 10px 0
+
+.story-unordered-list
+    position relative
+    list-style-type none
+
+    & > .story-list::before
+        position absolute
+        top 17px
+        left 15px
+        content "\2022"
+        font-size inherit
+        color var(--secondary-text)
+
+.story-blockquote
+    width 100%
+    margin 15px auto
+    padding 15px
+    color var(--secondary-text)
+    font-size 16px
+    margin 10px 0
+    line-height 1.6em
+    white-space pre-wrap
+    overflow-x auto
+    overflow-y hidden
+    -webkit-overflow-scrolling touch
+    background-color var(--preload)
+    border-radius 6px
+
+    &::-webkit-scrollbar
+        height 4px
+        background-color var(--preload)
+
+    &::-webkit-scrollbar-thumb
+        background-color rgba(0,0,0,.25)
+        border-radius 4px
+
+    & > .story-code
+        display block
+        width 100%
+        white-space pre
+        word-break keep-all
+        font-family Consolas, "Liberation Mono", Menlo, Courier, monospace
+
+.story-code
+    font-size .95em
+    font-weight bold
+    word-break break-all
+    font-family Consolas, "Liberation Mono", Menlo, Courier, monospace
+    padding 2px 4px
+    border-radius 3px
+    background-color var(--preload)
+
+.story-hr
+    display block
+    width 96px
+    height 5px
+    margin 50px auto
+    background radial-gradient(circle, var(--border), var(--border) 2px, transparent 2px, transparent)
+    background-size 36px
+    background-repeat repeat-x
+    background-position 0 center
+    border 0
+
+.story-link
+    color var(--link)
+    text-decoration none
+    padding 1px 5px
+    border-radius 4px
+    transition background-color .2s ease-out
+    word-break break-word
+
+    &:hover,
+    &:focus
+        background-color var(--link-fade)
+
+#focus-image-overlay
+    top 0
+    left 0
+    position fixed
+    z-index -1
+    display flex
+    flex-direction column
+    justify-content center
+    align-items center
+    width 100%
+    height 100vh
+    background-color rgba(0,0,0,.625)
+    opacity 0
+    transition opacity .25s ease-out
+    animation focus-overlay-fade-in .25s ease-out 0s 1
+    cursor zoom-out
+
+    &.active
+        z-index 3000
+        opacity 1
+
+    &.is-not-active
+        animation focus-overlay-fade-out .25s ease-out 0s 1
+
+    @keyframes focus-overlay-fade-in
+        from
+            opacity 0
+
+        to
+            opacity 1
+
+    @keyframes focus-overlay-fade-out
+        from
+            opacity 1
+            z-index 3000
+
+        to
+            opacity 0
+            z-index 3000
+
+#focus-image
+    max-width 100%
+    max-height 100vh
+    object-fit cover
+    object-position center
+    border-radius 6px
+
+    &::selection,
+    &::-webkit-selection
+        background-color transparent
+
+@media screen and (min-width 568px) and (max-width 767.9px)
+
+    @media screen and (orientation: landscape)
+        #story-title
+            padding-bottom 30px
+
+            & > .title
+                font-size 48px
+
+            & > .time
+                font-size 24px
+
+@media screen and (min-width 768px) and (max-width 1023.9px)
+    :root
+        --story-width 750px
+
+    #story, #story > .article
+        width 100%
+
+    #story > .article
+        & > .thumbnail
+            &.preload
+                height 420px
+
+            > .thumbnail-edge
+                display none        
+
+    #story-title
+        padding-top 30px
+
+        & > .title
+            font-size 48px
+
+        & > .time
+            font-size 24px
+
+    .story-detail
+        font-size 21px
+        margin 15px 0
+
+    .story-blockquote
+        font-size 18px
+
+    .story-unordered-list
+        & > .story-list::before
+            top 23px
+
+    @media screen and (orientation: portrait)
+        .story-detail
+            font-size 22px
+            line-height 1.6em
+            margin 20px 0
+
+@media screen and (min-width 1024px) and (max-width 1365.9px)
+    :root
+        --story-width 790px
+
+    #story > .article > .thumbnail
+        width 740px
+        border-radius 8px
+        margin-top 10px
+        margin-bottom 50px
+        box-shadow  0 7px 20px rgba(0,0,0,.125),
+                    0 3px 8px rgba(0,0,0,.125)
+
+        &.preload
+            height 444px
+
+        & > .thumbnail-edge
+            display none
+
+    #story-title
+        display none
+
+    #story-title-large
+        display block
+        margin 65px auto 20px auto
+
+        & > .title
+            font-size 60px
+            font-weight bold
+
+        & > .detail
+            font-size 18px
+            margin-top 15px
+
+    .story-detail
+        font-size 21px
+        line-height 1.6em
+        margin 15px 0
+
+    .story-blockquote
+        font-size 18px
+
+    .story-unordered-list
+        & > .story-list::before
+            top 23px
+
+    @media screen and (orientation: portrait)
+        .story-detail
+            font-size 24px
+            line-height 1.6em
+            margin 20px 0
+        
+        .story-blockquote
+            font-size 20px
+
+        .story-unordered-list
+            & > .story-list::before
+                top 30px
+
+@media screen and (min-width 1366px)
+    :root
+        --story-width 860px
+
+    #story > .article > .thumbnail
+        width 840px
+        border-radius 8px
+        margin-top 10px
+        margin-bottom 50px
+        box-shadow  0 7px 20px rgba(0,0,0,.125),
+                    0 3px 8px rgba(0,0,0,.125)
+
+        &.preload
+            height 485px
+
+        & > .thumbnail-edge
+            display none
+
+    #story-title-large
+        display block
+        margin 65px auto 20px auto
+
+        & > .title
+            font-size 60px
+            font-weight bold
+
+        & > .detail
+            font-size 18px
+            margin-top 15px
+
+    #story-title
+        display none
+
+    .story-detail
+        font-size 22px
+        line-height 1.6em
+        margin 20px 0
+
+    .story-unordered-list
+        & > .story-list::before
+            top 28px
+
+    .story-blockquote
+        font-size 18px
+
+    @media screen and (orientation: portrait)
+        .story-detail
+            font-size 24px
+            line-height 1.6em
+            margin 20px 0
+
+        .story-blockquote
+            font-size 20px
+
+        .story-unordered-list
+            & > .story-list::before
+                top 30px

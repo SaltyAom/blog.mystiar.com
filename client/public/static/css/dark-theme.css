@@ -1,0 +1,11 @@
+:root {
+    --primary-text: #eee;
+    --secondary-text: #ddd;
+    --tertiary-text: #bbb;
+    --link: #008fff;
+    --link-fade: rgba(0, 123, 255, 0.125);
+    --border: #363636;
+    --background: #272727;
+    --preload: #363636;
+    --root:#363636;
+}

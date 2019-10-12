@@ -1,0 +1,51 @@
+#landing
+    display flex
+    flex-direction column
+    justify-content center
+    align-items center
+    width 100%
+    height 100vh
+
+#san-diego
+    width 300px
+    height 300px
+
+#title
+    color var(--primary-text)
+    font-size 36px
+    margin 0 0 10px 0
+
+#sub-title
+    color var(--tertiary-text)
+    font-size 16px
+    font-weight normal
+    margin 0 0 50px 0
+
+#detail
+    color var(--link)
+    font-size 21px
+    font-weight normal
+    text-decoration none
+    margin 0
+    padding 3px 6px 
+    border-radius 3px
+    transition background-color .2s
+
+    &:hover,
+    &:focus
+        background-color var(--link-fade)
+
+@media screen and (max-height 480px)
+    #san-diego
+        width 175px
+        height 175px
+
+    #title
+        font-size 32px
+
+    #sub-title
+        font-size 14px
+        margin-bottom 20px
+
+    #detail
+        font-size 18px

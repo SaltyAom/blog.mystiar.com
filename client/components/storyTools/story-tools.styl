@@ -1,0 +1,61 @@
+#story-tools-position
+    position absolute
+    z-index 10
+    top 100px
+    left 50px
+
+#story-tools
+    position fixed
+    display flex
+    flex-direction column
+    justify-content center
+    align-items center
+
+    & > .tool
+        display block
+        margin 0 0 20px 0
+        transform scale(1.25)
+        fill var(--secondary-text)
+        transition transform .25s ease-out
+        outline none
+        cursor pointer
+
+        &:hover,
+        &:focus
+            transform scale(1.35)
+            animation interact .25s ease-in-out 0s 1
+
+            @keyframes interact
+                0%
+                    transform scale(1.25)
+
+                50%
+                    transform scale(1.15)
+
+                100%
+                    transform scale(1.35)
+
+@media screen and (max-width 899.9px)
+    #story-tools
+        right calc(5% + env(safe-area-inset-right))
+        bottom calc(30px + env(safe-area-inset-bottom))
+        width 56px
+        height 56px
+        flex-direction row
+        background-color var(--link)
+        border-radius 28px
+
+        & > .tool
+            fill #fff
+            margin 0 0 0 20px
+
+            &:first-child
+                margin 0
+
+@media screen and (min-width 900px) and (max-width 1023.9px) 
+    #story-tools-position
+        left 5%
+
+@media screen and (min-width 1024px)
+    #story-tools-position
+        left -62.5px

@@ -1,0 +1,173 @@
+#editor
+    display flex
+    flex-direction column
+    justify-content flex-start
+    align-items center
+    width 100%
+    margin-bottom calc(50px + env(safe-area-inset-bottom))
+
+    & > .thumbnail
+        display block
+        width 100%
+        height 50vh
+        background-color var(--preload)
+        overflow hidden
+
+        & > .image
+            display block
+            width inherit
+            height inherit
+            background-size cover
+            background-position center center
+            background-repeat no-repeat
+    
+    & > .detail
+        display block
+        color var(--secondary-text)
+        font-size 21px
+        font-weight normal
+        margin 50px 0 20px 0
+
+        &.preload
+            width 280px
+            height 21px
+            background-color var(--preload)
+            border-radius 4px
+
+#editor-detail
+    position relative
+    display flex
+    flex-direction column
+    justify-content flex-start
+    align-items center
+    width 100%
+    background-color var(--background)
+
+    & > .profile
+        position absolute
+        top -74px
+        width 144px
+        height 144px
+        margin 0
+        background-color var(--preload)
+        border-radius 72px
+        border 2px solid var(--background)
+
+        & > .image
+            width 140px
+            height 140px
+            border-radius 70px
+            object-fit cover
+            object-position center
+
+    & > .title
+        display block
+        font-size 32px
+        color var(--primary-text)
+        margin 84px 0 10px 0
+
+        &.preload
+            width 200px
+            height 32px
+            background-color var(--preload)
+            border-radius 4px
+
+    & > .bio
+        display block
+        width 90%
+        color var(--secondary-text)
+        font-size 21px
+        text-align center
+
+        &.preload
+            width 280px
+            height 21px
+            background-color var(--preload)
+            border-radius 4px
+
+#editor-more-story
+    display grid
+    grid-gap 30px
+    align-items center
+    width var(--story-width)
+    margin 30px 0
+    padding 0 20px
+
+    & > .story-more-card-link
+        text-decoration none
+        outline none
+
+        &:hover,
+        &:focus
+            & > .story-more-card
+                transform scale(1.025)
+                box-shadow  0 4px 16px rgba(0,0,0,.0875),
+                            0 8px 32px rgba(0,0,0,.0875)
+
+.story-more-card
+    display flex
+    flex-direction column
+    justify-content flex-start
+    align-items flex-start
+    width 100%
+    margin 0 auto 30px auto
+    background-color var(--root)
+    box-shadow  0 2px 8px rgba(0,0,0,.0875),
+                0 4px 16px rgba(0,0,0,.0875)
+    border-radius 4px
+    transition box-shadow .2s ease-out, transform .2s ease-out
+
+    & > .thumbnail
+        display block
+        width 100%
+        margin 0
+        background-color var(--preload)
+        border-top-left-radius 4px
+        border-bottom-left-radius 4px
+
+        & > .image
+            display block
+            width inherit
+            border-top-left-radius inherit
+            border-bottom-right-radius inherit
+
+    & > .title
+        font-size 28px
+        color var(--secondary-text)
+        margin 20px 0
+        padding 0 15px
+
+    & > .tags
+        padding 0 15px
+
+@media screen and (min-width 568px)
+    #editor
+        & > .thumbnail
+            height 440px
+
+    #editor-more-story
+        grid-template-columns repeat(2, 1fr)
+
+    .story-more-card-link
+        width 100%
+        height 100%
+
+        & > .story-more-card
+            margin 0
+
+@media screen and (min-width 768px) and (max-width 1023.9px)
+    :root
+        --story-width 750px
+
+@media screen and (min-width 1024px) and (max-width 1365.9px)
+    :root
+        --story-width 790px
+
+@media screen and (min-width 1366px)
+    :root
+        --story-width 860px
+
+@media screen and (max-height 568px)
+    #editor
+        & > .thumbnail
+            height 67.5vh

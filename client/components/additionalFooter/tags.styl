@@ -1,0 +1,59 @@
+#additional-footer
+    display flex
+    flex-direction column-reverse
+    justify-content space-between
+    align-items flex-start
+    width var(--story-width)
+    margin 15px auto
+    padding 0 5%
+
+.tags
+    display block
+    flex 1
+    width 100%
+
+    & > .tag
+        display inline-block
+        color var(--tertiary-text)
+        font-size 18px
+        text-decoration none
+        padding 3px 8px
+        margin 0 8px 12px 0
+        background-color var(--preload)
+        border-radius 3px
+
+        &.preload
+            width 35%
+            height 24px
+
+            &:nth-child(even)
+                width 20%
+
+#share
+    display flex
+    flex-direction row-reverse
+    justify-content space-between
+    align-items flex-start
+    width auto
+    margin-bottom 30px
+
+    & > .share-link
+        display inline-block
+        width auto
+        height auto
+
+        & > .share-icon
+            display flex
+            flex-direction row
+            width 30px
+            height 30px
+            margin-left 10px
+            fill var(--tertiary-text)
+            cursor pointer
+
+            & > .path
+                transform scale(1.25) translateY(-5px)
+
+@media screen and (min-width 568px)
+    #additional-footer
+        flex-direction row
