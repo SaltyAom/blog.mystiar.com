@@ -3,6 +3,8 @@ const withCSS = require("@zeit/next-css")
 const withStylus = require("@zeit/next-stylus")
 const withOffline = require("next-offline")
 
+const OptimizeCSSAssetsPlugin = require("optimize-css-assets-webpack-plugin");
+
 module.exports = withCSS(
 	withStylus(
 		withOffline({
@@ -18,6 +20,9 @@ module.exports = withCSS(
 				]
 			},
 			webpack(config, options) {
+				config.optimization.minimizer = []
+				config.optimization.minimizer.push(new OptimizeCSSAssetsPlugin({}))
+
 				config.resolve.alias["react"] = "preact/compat"
 				config.resolve.alias["react-dom"] = "preact/compat"
 				config.resolve.alias["react-ssr-prepass"] = "preact-ssr-prepass"

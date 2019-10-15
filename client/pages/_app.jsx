@@ -10,13 +10,21 @@ import { store } from "stores"
 
 import NProgress from "next-nprogress/component"
 
+import { isServer } from "helpers/normalize"
+
+import { initGA, logPageView } from "helpers/analytics"
+
 import ThemeManager from "components/themeManager"
 
 import "stylus/init.styl"
 
 class MyApp extends App {
 	componentDidMount() {
-		if ("serviceWorker" in navigator && process.env.NODE_ENV === "production") {
+		if (
+			"serviceWorker" in navigator &&
+			process.env.NODE_ENV === "production" &&
+			!isServer
+		) {
 			window.addEventListener("load", function() {
 				navigator.serviceWorker.register(
 					"/_next/static/service-worker.js",
@@ -24,6 +32,11 @@ class MyApp extends App {
 				)
 			})
 		}
+		if (!isServer && !window.GA_INITIALIZED) {
+			initGA()
+			window.GA_INITIALIZED = true
+		}
+		logPageView()
 	}
 
 	render() {

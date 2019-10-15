@@ -9,7 +9,7 @@ class MystiarBlog extends RESTDataSource {
 
 	async getBlogs() {
 		return this.get(
-			`${this.prefix}content_type=content&order=sys.createdAt`
+			`${this.prefix}content_type=content&order=-sys.createdAt`
 		)
 	}
 
@@ -27,7 +27,7 @@ class MystiarBlog extends RESTDataSource {
 		let editorID = editor.items[0].sys.id
 
 		let blogs = await this.get(
-			`${this.prefix}content_type=content&fields.editor.sys.id=${editorID}&order=sys.createdAt`
+			`${this.prefix}content_type=content&fields.editor.sys.id=${editorID}&order=-sys.createdAt`
 		)
 
 		return JSON.stringify(
