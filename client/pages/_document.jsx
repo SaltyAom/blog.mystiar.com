@@ -12,7 +12,8 @@ export default class MyDocument extends Document {
                     <meta property="og:type" content="blog" />
                     <meta name="robots" content="index, follow" />
 
-                    <link rel="icon" href="/static/icon/mystiar.png" />
+                    <link rel="icon" href="/icon/mystiar.png" />
+                    <link rel="preload" as="stylesheet" href="/static/css/dark-theme.css" />
                 </Head>
                 <body>
                     <Main />

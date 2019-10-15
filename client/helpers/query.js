@@ -7,8 +7,6 @@ export const getBlogBy = gql`
 				sys {
 					createdAt
 					updatedAt
-					revision
-					locale
 				}
 				fields {
 					title
@@ -18,6 +16,60 @@ export const getBlogBy = gql`
 							linkType
 						}
 					}
+					tags
+					editor {
+						sys {
+							id
+						}
+					}
+				}
+			}
+			includes {
+				Entry {
+					sys {
+						id
+					}
+					fields {
+						name
+						bio
+						image {
+							sys {
+								id
+							}
+						}
+					}
+				}
+				Asset {
+					sys {
+						id
+					}
+					fields {
+						title
+						description
+						file {
+							url
+							fileName
+							contentType
+							details {
+								size
+								image {
+									width
+									height
+								}
+							}
+						}
+					}
+				}
+			}
+		}
+	}
+`
+
+export const getBlogDataBy = gql`
+	query getBlogBy($name: String) {
+		getBlogBy(name: $name) {
+			items {
+				fields {
 					content {
 						nodeType
 						content {
@@ -64,49 +116,6 @@ export const getBlogBy = gql`
 								}
 							}
 							nodeType
-						}
-					}
-					tags
-					editor {
-						sys {
-							id
-						}
-					}
-				}
-			}
-			includes {
-				Entry {
-					sys {
-						id
-					}
-					fields {
-						name
-						bio
-						image {
-							sys {
-								id
-							}
-						}
-					}
-				}
-				Asset {
-					sys {
-						id
-					}
-					fields {
-						title
-						description
-						file {
-							url
-							fileName
-							contentType
-							details {
-								size
-								image {
-									width
-									height
-								}
-							}
 						}
 					}
 				}

@@ -25,17 +25,17 @@ module.exports = withCSS(
 					"preact-render-to-string"
 				config.resolve.alias["assets"] = path.join(
 					__dirname,
-					"public/static/assets"
+					"public/assets"
 				)
 				config.resolve.alias["stylus"] = path.join(
 					__dirname,
-					"public/static/stylus"
+					"public/stylus"
 				)
 				config.resolve.alias["components"] = path.join(
 					__dirname,
 					"components"
 				)
-				config.resolve.alias["static"] = path.join(__dirname, "public/static")
+				config.resolve.alias["public"] = path.join(__dirname, "public")
 				config.resolve.alias["stores"] = path.join(__dirname, "stores")
 				config.resolve.alias["helpers"] = path.join(
 					__dirname,

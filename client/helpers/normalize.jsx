@@ -6,6 +6,19 @@ import { LazyLoadImage } from "react-lazy-load-image-component"
 
 import { Tags } from "components/additionalFooter"
 
+export const isServer = typeof window === "undefined"
+
+/**
+ * @typedef {Array} normalizedAssets
+ * @property {String} url - Asset's location (url).
+ * @property {String} alt - Asset's alternate text.
+ */
+
+/**
+ * Normalize Contentful's assets for easier access.
+ * @param {Object} assets - contentful.includes.Assets.
+ * @return {normalizedAssets} normalizedAssets - Array of normalized assets having id as array's key.
+ */
 export const normalizeAssets = assets => {
 	let normalizedAssets = {}
 	assets.forEach(asset => {
@@ -18,10 +31,23 @@ export const normalizeAssets = assets => {
 	return normalizedAssets
 }
 
-export const normalizeContent = content => {
+/**
+ * @typedef {Object} normalizedMetadata
+ * @property {String} title - Content's title.
+ * @property {normalizedAssets} thumbnail - Content's thumbnail data.
+ * @property {Array} tags - Content's tags.
+ * @property {Date} createdAt - Content's created date.
+ * @property {Date} modifiedAt - Content's modified date.
+ */
+
+/**
+ * Normalized Blog's metadata for easier access.
+ * @param {Object} content - contentful.items[0].
+ * @return {normalizedMetadata} - Normalized Metadata.
+ */
+export const normalizeMetadata = content => {
 	let normalizedContent = {
 		title: content.fields.title,
-		content: content.fields.content.content,
 		thumbnail: content.fields.thumbnail.sys.id,
 		tags: content.fields.tags,
 		editor: content.fields.editor.sys.id,
@@ -31,6 +57,20 @@ export const normalizeContent = content => {
 	return normalizedContent
 }
 
+/**
+ * @typedef {Object} normalizedEditor
+ * @property {String} name - Editor's name.
+ * @property {String} bio - Editor's short biological data. 
+ * @property {normalizedAssets} image - Editor's image data.
+ * @property {normalizedAssets} cover - Editor's cover image data.
+ */
+
+/**
+ * Normalized Editor's data for easier access.
+ * @param {Object} editor - contentful.items[0].
+ * @param {Object} normalizedContent - normalizedContent from normalizedContent(contentful.items[0]).
+ * @return {normalizedEditor} - Normalized Editor's data.
+ */
 export const normalizeEditor = (editor, normalizedAssets) => {
 	let normalizedEditor = {
 		name: editor[0].fields.name,
@@ -41,11 +81,24 @@ export const normalizeEditor = (editor, normalizedAssets) => {
 	return normalizedEditor
 }
 
+/**
+ * @typedef {Object} normalizedCard
+ * @property {string} title - Card's title.
+ * @property {normalizedAssets} Thumbnails - Card's thumbnail data.
+ * @property {Array} tags - Card's tags.
+ */
+
+/**
+ * Normalize preview blog for easier access.
+ * @param {Object} shallowBlogs - Preview blog data including.
+ * @param {Object} normalizedAssets - normalizedAssets from normalizeAssets(contentful.includes.Assets).
+ * @return {normalizedCard} - Normalized Card's data.
+ */
 export const normalizeCard = (shallowBlogs, normalizedAssets) => {
 	let normalizedCard = []
 	shallowBlogs.forEach((shallowBlog) => {
 		normalizedCard.push({
-			title: shallowBlog.fields.title,
+			title: shallowBlog.fields.title.replace(/ /g, "-"),
 			thumbnail: normalizedAssets[shallowBlog.fields.thumbnail.sys.id],
 			tags: shallowBlog.fields.tags
 		})
@@ -53,63 +106,16 @@ export const normalizeCard = (shallowBlogs, normalizedAssets) => {
 	return normalizedCard
 }
 
-const randomKey = () =>
-	Math.random()
-		.toString(36)
-		.substring(7)
-
-const marksToReactComponent = (content, marks) => {
-	if (marks === null) return content
-	if (typeof marks === "undefined") return content
-	if (marks.length === 0) return content
-
-	if (marks.length === 1) {
-		if (marks[0].type.includes("bold"))
-			return <b key={randomKey()} className="story-b">{content}</b>
-
-		if (marks[0].type.includes("code"))
-			return <code key={randomKey()} className="story-code">{content}</code>
-	}
-
-	if (marks.length === 2) {
-		if (
-			(marks[0].type.includes("bold") &&
-				marks[1].type.includes("code")) ||
-			(marks[1].type.includes("bold") && marks[0].type.includes("code"))
-		)
-			return (
-				<code key={randomKey()} className="story-code">
-					<b>{content}</b>
-				</code>
-			)
-	}
-}
-
-const connectLink = content => {
-	if (Object.keys(content).length === 0) return content
-	return (
-		<a
-			className="story-link"
-			href={content.data.uri}
-			target="_blank"
-			rel="noopener noreferrer"
-			key={randomKey()}
-		>
-			{content.content[0].value}
-		</a>
-	)
-}
-
-const renderParagraph = paragraph => {
-	if (paragraph.nodeType === "hyperlink") return connectLink(paragraph)
-
-	return marksToReactComponent(paragraph.value, paragraph.marks)
-}
-
+/**
+ * Render blog's content as React Element.
+ * @param {Object} normalizedContent - normalizedContent from normalizedContent(contentful.items[0]).
+ * @param {Object} normalizedAssets - normalizedAssets from normalizeAssets(contentful.includes.Assets).
+ * @param {Function} expandImage - function to be invoked when the user click the image.
+ * @return {React.Component} - Set of blog's data.
+ */
 export const renderNormalizedContent = (
 	normalizedContent,
 	normalizedAssets,
-	complete,
 	expandImage
 ) => {
 	let structure = []
@@ -251,10 +257,14 @@ export const renderNormalizedContent = (
 				return
 		}
 	})
-	complete()
 	return <Fragment>{structure}</Fragment>
 }
 
+/**
+ * Render preview card as React Component.
+ * @param {*} normalizedCard - normalizedCard from normalizedCard().
+ * @return {React.Component} - Set of Preview cards maximum to 100.
+ */
 export const renderCard = (normalizedCard) => {
 	let structure = []
 
@@ -270,7 +280,7 @@ export const renderCard = (normalizedCard) => {
 								alt={card.thumbnail.alt}
 							/>
 						</figure>
-						<h3 className="title">{card.title}</h3>
+						<h3 className="title">{card.title.replace(/-/g," ")}</h3>
 						<Tags tags={card.tags} />
 					</article>
 				</a>
@@ -279,4 +289,77 @@ export const renderCard = (normalizedCard) => {
 	})
 
 	return structure
+}
+
+/**
+ * Generate random key..
+ * @return {Number} key - generated random key.
+ */
+const randomKey = () =>
+	Math.random()
+		.toString(36)
+		.substring(7)
+
+/**
+ * Return React Component from marks data in Contentful content's fields..
+ * @param {String} value - Contentful value field.
+ * @param {Object} marks - Contentful's marks field.
+ * @return {React.Component} - Marked data as React Component.
+ */
+const marksToReactComponent = (value, marks) => {
+	if (marks === null) return value
+	if (typeof marks === "undefined") return value
+	if (marks.length === 0) return value
+
+	if (marks.length === 1) {
+		if (marks[0].type.includes("bold"))
+			return <b key={randomKey()} className="story-b">{value}</b>
+
+		if (marks[0].type.includes("code"))
+			return <code key={randomKey()} className="story-code">{value}</code>
+	}
+
+	if (marks.length === 2) {
+		if (
+			(marks[0].type.includes("bold") &&
+				marks[1].type.includes("code")) ||
+			(marks[1].type.includes("bold") && marks[0].type.includes("code"))
+		)
+			return (
+				<code key={randomKey()} className="story-code">
+					<b>{value}</b>
+				</code>
+			)
+	}
+}
+
+/**
+ * Connect link (if has) as React Component.
+ * @param {Object} content - Contentful's content fields.
+ * @returns {React.Component} - Link connected React Component.
+ */
+const connectLink = content => {
+	if (Object.keys(content).length === 0) return content
+	return (
+		<a
+			className="story-link"
+			href={content.data.uri}
+			target="_blank"
+			rel="noopener noreferrer"
+			key={randomKey()}
+		>
+			{content.content[0].value}
+		</a>
+	)
+}
+
+/**
+ * Render paragraph and marks content as React Component.
+ * @param {Object} paragraph - Contentful's content fields.
+ * @return {React.Component} - Paragraph as React Component.
+ */
+const renderParagraph = paragraph => {
+	if (paragraph.nodeType === "hyperlink") return connectLink(paragraph)
+
+	return marksToReactComponent(paragraph.value, paragraph.marks)
 }

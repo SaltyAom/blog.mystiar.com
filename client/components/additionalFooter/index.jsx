@@ -17,7 +17,7 @@ export const Tags = ({ tags = [], preload = false }) => {
 	return (
 		<section className="tags">
 			{tags.map((tag, index) => (
-				<Link key={index} href={`/tag/${tag}`}>
+				<Link key={index} href="/tag/[tag]" as={`/tag/${tag}`}>
 					<a className="tag">{tag}</a>
 				</Link>
 			))}
@@ -88,7 +88,7 @@ const AdditionalFooter = ({ tags = [], title = "", preload = false }) => {
 					className="share-link twitter-share-button"
 					target="_blank"
 					rel="noopener noreferrerf"
-					href={`https://twitter.com/intent/tweet?original_referer=https://blog.mystiar.com/story/${encodeURI(
+					href={`https://twitter.com/intent/tweet?url=https://blog.mystiar.com/story/${encodeURI(
 						title
 					)}`}
 				>

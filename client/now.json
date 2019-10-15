@@ -3,18 +3,16 @@
 	"alias": "blog.mystiar.com",
 	"version": 2,
 	"builds": [
-		{ "src": "server.js", "use": "@now/node" },
 		{ "src": "next.config.js", "use": "@now/next" }
 	],
 	"regions": ["all"],
 	"routes": [
 		{
-			"src": "/.*",
+			"src": "/(.*)",
 			"headers": {
-				"Access-Control-Allow-Origin": "deny",
+				"Access-Control-Allow-Origin": "null",
 				"Access-Control-Allow-Methods": "GET",
 				"Access-Control-Allow-Headers": "X-Requested-With, Content-Type, Accept",
-				"x-now-cache": "HIT",
 				"cache-control": "must_revalidate, public, max-age=604800",
 				"Accept-Encoding": "br",
 				"Service-Worker-Allowed": "/"
@@ -29,16 +27,7 @@
 			}
 		},
 		{
-			"src": "/_next/static/(?:[^/]+/pages|chunks|runtime)/.+",
-			"headers": {
-				"Access-Control-Allow-Origin": "deny",
-				"Access-Control-Allow-Methods": "GET",
-				"Access-Control-Allow-Headers": "X-Requested-With, Content-Type, Accept",
-				"x-now-cache": "HIT",
-				"cache-control": "must_revalidate, public, max-age=604800",
-				"Accept-Encoding": "br",
-				"Service-Worker-Allowed": "/"
-			}
+			"src": "/_next/static/(?:[^/]+/pages|chunks|runtime)/.+"
 		}
 	]
 }

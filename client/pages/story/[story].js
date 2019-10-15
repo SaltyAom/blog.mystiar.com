@@ -1,38 +1,77 @@
 import { Fragment, useState, useEffect } from "react"
 
+import { useLazyQuery } from '@apollo/react-hooks'
+
 import Head from "next/head"
 import dynamic from "next/dynamic"
 
-import { useQuery } from "@apollo/react-hooks"
-import { getBlogBy } from "helpers/query"
+import { getBlogBy, getBlogDataBy } from "helpers/query"
 
 import {
 	normalizeAssets,
-	normalizeContent,
+	normalizeMetadata,
 	normalizeEditor,
-	renderNormalizedContent
+	renderNormalizedContent,
+	isServer
 } from "helpers/normalize"
 
 import { Title, Description, Tag, SEOImage } from "components/head"
-import StoryPreload from "components/storyPreload"
 
 import "stylus/story.styl"
 
+const StoryPreload = dynamic(() => import("components/storyPreload"))
 const StoryTitle = dynamic(() => import("components/storyTitle"))
 const Editor = dynamic(() => import("components/editor"))
 const AdditionalFooter = dynamic(() => import("components/additionalFooter"))
 const Error = dynamic(() => import("components/error"))
 const StoryTools = dynamic(() => import("components/storyTools"))
 
-const Blog = ({ storyName }) => {
-	let [isParsing, setParsing] = useState(true),
-		[isComputed, setComputed] = useState(true)
+const Blog = ({ blog, storyName }) => {
+	if (
+		typeof blog.getBlogBy === "undefined" ||
+		blog.getBlogBy.includes === null
+	)
+		return <Error />
 
-	/* Apollo GraphQL */
-	let { data, isLoading, error } = useQuery(getBlogBy, {
-		variables: { name: storyName },
-		ssr: true
-	})
+	let assets, metadata, editor
+
+	assets = normalizeAssets(blog.getBlogBy.includes.Asset)
+	metadata = normalizeMetadata(blog.getBlogBy.items[0])
+	editor = normalizeEditor(blog.getBlogBy.includes.Entry, assets)
+
+	let structureData = `
+		{
+			"@context":"https://schema.org/",
+			"@type":"Article",
+			"datePublished": "${metadata.createdAt}",
+			"dateModified": "${metadata.updatedAt}",
+			"description": "${storyName}",
+			"headline": "${storyName}",
+			"image": ["${assets[metadata.thumbnail].url}"],
+			"inLanguage": "Thai",
+			"mainEntityOfPage": "https://blog.mystiar.com/blog/${storyName}",
+			"url": "https://blog.mystiar.com/blog/${storyName}",
+			"publisher": {
+				"@type": "Organization",
+				"name": "Mystiar Blog",
+				"logo": {			
+					"@type": "imageObject",
+					"width": "512",
+					"height": "512",
+					"url": "https://blog.mystiar.com/icon/mystiar.png"
+				}
+			},
+			"author": {
+				"name": "${editor.name}",
+				"image": {
+					"@type": "imageObject",
+					"width": "512",
+					"height": "512",
+					"url": "${editor.image.url}"
+				}
+			}
+		}
+	`.replace(/\n|\t|  /g, "")
 
 	let [focusedImage, setFocusedImage] = useState(""),
 		[isFocusedImageVisible, setFocusedImageVisible] = useState(false)
@@ -40,73 +79,40 @@ const Blog = ({ storyName }) => {
 	let showFocusedImage = src => {
 		setFocusedImage(src)
 		setFocusedImageVisible(true)
-	}	
+	}
 
-	if (error) return <Error />
+	/* Client Side Rendering */
+	let [ loadBlogData, blogData ] = useLazyQuery(getBlogDataBy, {
+		variables: { name: storyName, type: "content" },
+		ssr: true,
+	})
 
-	/* Check if data loading */
 	useEffect(() => {
-		if (typeof data === "undefined") return setParsing(true)
-		if (typeof data.getBlogBy === "undefined") return setParsing(true)
-		setParsing(false)
-	}, [data])
-
-	if (isLoading || isParsing) return <StoryPreload />
-
-	/* If story are valid */
-	let assets, content, editor
-
-	assets = normalizeAssets(data.getBlogBy.includes.Asset)
-	content = normalizeContent(data.getBlogBy.items[0])
-	editor = normalizeEditor(data.getBlogBy.includes.Entry, assets)
-
-	let structureData = `
-		{
-			"@context":"https://schema.org/",
-			"@type":"Article",
-			"name":"${content.title}",
-			"datePublished": "${content.createdAt}",
-			"dateModified": "${content.updatedAt}",
-			"description": "${content.content[0].content[0].value}",
-			"headline": "${content.title}",
-			"image": "${assets[content.thumbnail].url}",
-			"inLanguage": "Thai",
-			"mainEntityOfPage": "https://blog.mystiar.com/blog/${storyName}",
-			"url": "https://blog.mystiar.com/blog/${storyName}"
-		}
-	`.replace(/\n|\t|  /g, "")
-
-	let computeComplete = () => setComputed(true)
-
-	let renderedNormalizedContent = renderNormalizedContent(
-		content,
-		assets,
-		computeComplete,
-		showFocusedImage
-	)
-
-	if (!isComputed) return <StoryPreload />
+		setTimeout(() => {
+			loadBlogData()
+		}, 250)
+	}, [])
 
 	return (
 		<Fragment>
 			{/* SEO */}
-			<Title>{content.title} - Mystiar Blog</Title>
-			<Description>{content.content[0].content[0].value}</Description>
-			<Tag tags={content.tags} />
+			<Title>{storyName} - Mystiar Blog</Title>
+			<Description>{storyName}</Description>
+			<Tag tags={metadata.tags} />
 			<SEOImage
-				href={assets[content.thumbnail].url}
-				alt={assets[content.thumbnail].alt}
+				href={assets[metadata.thumbnail].url}
+				alt={assets[metadata.thumbnail].alt}
 			/>
 			<Head>
-				<title>{content.title} - Mystiar Blog</title>
+				<title>{storyName} - Mystiar Blog</title>
 				{/** Structured Data (schema) */}
 				<meta
 					property="article:published_time"
-					content={content.createdAt}
+					content={metadata.createdAt}
 				/>
 				<meta
 					property="article:modified_time"
-					content={content.updatedAt}
+					content={metadata.updatedAt}
 				/>
 				<meta name="robots" content="index, follow" />
 
@@ -141,17 +147,16 @@ const Blog = ({ storyName }) => {
 					{/* Visible on large device */}
 					<header id="story-title-large">
 						<StoryTitle
-							title={content.title}
+							title={storyName}
 							editor={editor.name}
-							createdAt={content.createdAt}
+							createdAt={metadata.createdAt}
 						/>
 					</header>
 
 					<figure className="thumbnail">
 						<img
 							className="image"
-							src={assets[content.thumbnail].url}
-							loading="lazy"
+							src={assets[metadata.thumbnail].url}
 							onClick={event =>
 								showFocusedImage(event.target.src)
 							}
@@ -162,18 +167,29 @@ const Blog = ({ storyName }) => {
 					{/* Visible on small device */}
 					<header id="story-title">
 						<StoryTitle
-							title={content.title}
+							title={storyName}
 							editor={editor.name}
-							createdAt={content.createdAt}
+							createdAt={metadata.createdAt}
 						/>
 					</header>
 
 					{/* Blog content */}
 					<section id="story-data">
-						{renderedNormalizedContent}
+						{!isServer && !blogData.loading && typeof blogData.data !== "undefined" ? (
+							renderNormalizedContent(
+								blogData.data.getBlogBy.items[0].fields.content,
+								assets,
+								showFocusedImage
+							)
+						) : (
+							<StoryPreload />
+						)}
 					</section>
 
-					<AdditionalFooter tags={content.tags} title={content.title} />
+					<AdditionalFooter
+						tags={metadata.tags}
+						title={storyName}
+					/>
 
 					{/* Editor's detail */}
 					<Editor editor={editor} />
@@ -183,8 +199,14 @@ const Blog = ({ storyName }) => {
 	)
 }
 
-Blog.getInitialProps = (ctx) => {
-	return { storyName: ctx.query.story }
+Blog.getInitialProps = async ctx => {
+	const apolloClient = ctx.apolloClient
+	let blog = await apolloClient.query({
+		query: getBlogBy,
+		variables: { name: ctx.query.story.replace(/-/g, " "), type: "metadata" }
+	})
+
+	return { blog: blog.data, storyName: ctx.query.story.replace(/-/g, " ") }
 }
 
 export default Blog

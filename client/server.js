@@ -5,6 +5,9 @@ require("module-alias/register")
 const express = require("express")
 const next = require("next")
 const cacheableResponse = require("cacheable-response")
+const apicache = require("apicache")
+
+const cache = apicache.middleware
 
 /* Status */
 const port = parseInt(process.env.PORT, 10) || 3000
@@ -43,6 +46,7 @@ app.prepare().then(() => {
 	/* Create Server */
 	const server = express()
 	server.use(compression())
+	server.use(cache("6 hours"))
 
 	/* Route */
 	server.get("/", (req, res) => {

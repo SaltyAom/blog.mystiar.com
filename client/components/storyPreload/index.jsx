@@ -1,60 +1,24 @@
-import dynamic from "next/dynamic"
-
-const AdditionalFooter = dynamic(() => import("components/additionalFooter"))
-const StoryTools = dynamic(() => import("components/storyTools"))
+import { Fragment } from 'react'
 
 const StoryPreload = () => (
-	<main id="story">
-		<StoryTools />
+	<Fragment>
+		<p className="preload" />
+		<p className="preload" />
+		<p className="preload" />
+		<p className="preload half" />
+		<hr className="story-hr" />
 
-		{/* Blog */}
-		<article className="article">
-			{/* Visible on large device */}
-			<header id="story-title-large">
-				<h1 className="title preload" />
-				<p className="detail preload">
-					<span className="preload" />
-					<a className="inline-editor preload" />
-					<time className="publish-date preload" />
-				</p>
-			</header>
+		<p className="preload" />
+		<p className="preload" />
+		<p className="preload" />
+		<p className="preload half" />
+		<hr className="story-hr" />
 
-			<figure className="thumbnail preload">
-				<div className="thumbnail-edge" />
-			</figure>
-
-			{/* Visible on small device */}
-			<header id="story-title">
-				<h1 className="title preload" />
-				<p className="detail preload">
-					<span className="preload" />
-					<a className="inline-editor preload" />
-					<time className="publish-date preload" />
-				</p>
-			</header>
-
-			<section id="story-data">
-				<p className="preload" />
-				<p className="preload" />
-				<p className="preload" />
-				<p className="preload half" />
-				<hr className="story-hr" />
-
-				<p className="preload" />
-				<p className="preload" />
-				<p className="preload" />
-				<p className="preload half" />
-				<hr className="story-hr" />
-
-				<p className="preload" />
-				<p className="preload" />
-				<p className="preload" />
-				<p className="preload half" />
-			</section>
-
-			<AdditionalFooter preload tags={[""]} title="" />
-		</article>
-	</main>
+		<p className="preload" />
+		<p className="preload" />
+		<p className="preload" />
+		<p className="preload half" />
+	</Fragment>
 )
 
 export default StoryPreload

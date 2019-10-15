@@ -261,6 +261,11 @@ anymatch@^2.0.0:
     micromatch "^3.1.4"
     normalize-path "^2.1.1"
 
+apicache@^1.5.2:
+  version "1.5.2"
+  resolved "https://registry.npmjs.org/apicache/-/apicache-1.5.2.tgz#2cb0697d9b1b612b505b1a44face66d48b1d1404"
+  integrity sha512-jO8ie/Zqmr3MxLQSVNsHiQo5R1tbbP1TnpI6xOnRJv9wUOSP+YnZkULWmdo3fE7PHBSxIQzgIsEHGa6H5hKH9Q==
+
 apollo-cache-control@^0.8.5:
   version "0.8.5"
   resolved "https://registry.npmjs.org/apollo-cache-control/-/apollo-cache-control-0.8.5.tgz#d4b34691f6ca1cefac9d82b99a94a0815a85a5a8"

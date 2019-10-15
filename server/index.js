@@ -6,10 +6,34 @@ const express = require("express")
 const app = express()
 const cors = require("cors")
 const queue = require("express-queue")
-
 const compression = require("compression")
+const apicache = require("apicache")
+const bodyparser = require("body-parser")
 
-// Using queue middleware
+apicache.options({
+	appendKey: (req, res) => {
+		return req.body.operationName + JSON.stringify(req.body.variables)
+	}
+})
+const cache = apicache.middleware
+
+/* Config */
+const dev = process.env.NODE_ENV !== "production"
+
+/* Server config */
+let corsOptions = {
+	origin: "*"
+}
+
+dev
+	? corsOptions
+	: (corsOptions = {
+			origin: "https://blog.mystiar.com"
+	  })
+
+app.use(bodyparser.json({limit: '5mb'}))
+app.use(cors(corsOptions))
+if(!dev) app.use(cache("6 hours"))
 app.use(queue({ activeLimit: 40, queuedLimit: -1 }))
 app.use(compression())
 
@@ -23,9 +47,6 @@ const typeDefs = require("./graphql/schema")
 const resolvers = require("./graphql/resolvers")
 
 const MystiarBlog = require("./graphql/dataSources/mystiarBlog")
-
-/* Config */
-const dev = process.env.NODE_ENV !== "production"
 
 /* Apollo */
 const server = new ApolloServer({
@@ -44,7 +65,7 @@ const server = new ApolloServer({
 		apiKey: "service:Mystiar-Gateway:p771Ho3LeZcci4hRUWJDDA"
 	},
 	plugins: [responseCachePlugin()],
-	introspection: dev,
+	introspection: true,
 	playground: dev,
 	tracing: !dev,
 	cacheControl: {
@@ -54,20 +75,6 @@ const server = new ApolloServer({
 	}
 })
 
-/* Server config */
-let corsOptions = {
-	origin: "*"
-}
-
-dev
-	? (corsOptions = {
-			origin: "*"
-	  })
-	: (corsOptions = {
-			origin: "https://blog.mystiar.com"
-	  })
-
-app.use(cors(corsOptions))
 server.applyMiddleware({
 	app,
 	path: "/",

@@ -11,11 +11,13 @@ const dev = process.env.NODE_ENV !== "production"
 let link = dev
 	? new HttpLink({
 			uri: "http://localhost:8080",
-			fetch: fetch
+			fetch: fetch,
+			fetchPolicy: 'cache-and-network'
 	  })
 	: new HttpLink({
 			uri: "https://cdn.blog.mystiar.com",
-			fetch: fetch
+			fetch: fetch,
+			fetchPolicy: 'cache-and-network'
 	  })
 
 export default withApollo(
@@ -23,19 +25,7 @@ export default withApollo(
 		new ApolloClient(
 			{
 				link,
-				cache: new InMemoryCache({
-					cacheRedirects: {
-						Query: {
-							getBlogBy: (_, args) =>
-								toIdValue(
-									cache.config.dataIdFromObject({
-										__typename: "Blog",
-										name: args.name
-									})
-								)
-						}
-					}
-				}).restore(initialState || {}),
+				cache: new InMemoryCache().restore(initialState || {}),
 				ssrMode: true,
 				queryDeduplication: true,
 				defaultOptions: {
@@ -46,7 +36,7 @@ export default withApollo(
 				ssrForceFetchDelay: 300
 			},
 			{
-				getDataFromTree: "never"
+				getDataFromTree: "ssr"
 			}
 		)
 )

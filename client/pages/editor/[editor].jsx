@@ -1,16 +1,16 @@
-import { Fragment, useState, useEffect } from "react"
+import { Fragment } from "react"
 
 import Head from "next/head"
 import dynamic from "next/dynamic"
 
-import { useQuery } from "@apollo/react-hooks"
 import { getEditorWithBlogs } from "helpers/query"
 
 import {
 	normalizeAssets,
 	normalizeEditor,
 	normalizeCard,
-	renderCard
+	renderCard,
+	isServer
 } from "helpers/normalize"
 
 import { Title, Description, Tag, SEOImage } from "components/head"
@@ -19,50 +19,43 @@ import "stylus/editor.styl"
 
 const Error = dynamic(() => import("components/error"))
 
-const Editor = ({ editorName }) => {
-	let [isParsing, setParsing] = useState(true)
+const Editor = ({ editorDetail }) => {
+	if (
+		typeof editorDetail.data.getEditorWithBlogs === "undefined" ||
+		editorDetail.data.getEditorWithBlogs.includes === null
+	)
+		return <Error />
 
-	/* Apollo GraphQL */
-	let { data, isLoading, error } = useQuery(getEditorWithBlogs, {
-		variables: { name: editorName },
-		ssr: true
-	})
-
-	if (error) return <Error />
-
-	/* Check if data loading */
-	useEffect(() => {
-		if (typeof data === "undefined") return setParsing(true)
-		if (typeof data.getEditorWithBlogs === "undefined")
-			return setParsing(true)
-		setParsing(false)
-	}, [data])
-
-	if (isLoading || isParsing)
-		return (
-			<main id="editor">
-				<header className="thumbnail">
-					<div className="image" />
-				</header>
-				<article id="editor-detail">
-					<figure className="profile">
-					</figure>
-					<h1 className="title preload" />
-					<p className="bio preload" />
-				</article>
-				<h3 className="detail preload" />
-				<footer id="editor-more-story" />
-			</main>
-		)
-
-	/* If story are valid */
 	let assets, editor, card, tags
 
-	assets = normalizeAssets(data.getEditorWithBlogs.blog.includes.Asset)
-	editor = normalizeEditor(data.getEditorWithBlogs.editor.items, assets)
-	card = normalizeCard(data.getEditorWithBlogs.blog.items, assets)
+	assets = normalizeAssets(
+		editorDetail.data.getEditorWithBlogs.blog.includes.Asset
+	)
+	editor = normalizeEditor(
+		editorDetail.data.getEditorWithBlogs.editor.items,
+		assets
+	)
+	card = normalizeCard(
+		editorDetail.data.getEditorWithBlogs.blog.items,
+		assets
+	)
 
 	tags = [editor.name, "Mystiar Blog", "editor"]
+
+	let structureData = `
+		{
+			"@context" : "https://schema.org",
+			"@type" : "Person",
+			"name" : "${editor.name}",
+			"url" : "https://blog.mystiar.com/editor/${editor.name}",
+			"image": {
+				"@type": "imageObject",
+				"width": "512",
+				"height": "512",
+				"url": "${editor.image.url}"
+			}
+		}
+	`.replace(/\n|\t|  /g, "")
 
 	return (
 		<Fragment>
@@ -73,17 +66,13 @@ const Editor = ({ editorName }) => {
 			<SEOImage href={editor.cover.url} alt={editor.cover.alt} />
 			<Head>
 				<title>{editor.name} - Editor on Mystiar Blog</title>
-				{/** Structured Data (schema) */}
 				<meta name="robots" content="index, follow" />
-
-				{/*
 				<script
 					type="application/ld+json"
 					dangerouslySetInnerHTML={{
 						__html: structureData
 					}}
 				/>
-                */}
 			</Head>
 
 			<main id="editor">
@@ -107,14 +96,22 @@ const Editor = ({ editorName }) => {
 					<p className="bio">{editor.bio}</p>
 				</article>
 				<h3 className="detail">Stories written by {editor.name}</h3>
-				<footer id="editor-more-story">{renderCard(card)}</footer>
+				<footer id="editor-more-story">
+					{!isServer ? renderCard(card) : null}
+				</footer>
 			</main>
 		</Fragment>
 	)
 }
 
-Editor.getInitialProps = ctx => {
-	return { editorName: ctx.query.editor }
+Editor.getInitialProps = async ctx => {
+	let editorDetail = await ctx.apolloClient.query({
+		query: getEditorWithBlogs,
+		variables: { name: ctx.query.editor },
+		ssr: true
+	})
+
+	return { editorDetail: editorDetail }
 }
 
 export default Editor

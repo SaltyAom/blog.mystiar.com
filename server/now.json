@@ -22,10 +22,9 @@
         {
             "src":"/.*",
             "headers": { 
-                "Access-Control-Allow-Origin": "*",
-                "Access-Control-Allow-Methods": "GET",
+                "Access-Control-Allow-Origin": "httsp://blog.mystiar.com",
+                "Access-Control-Allow-Methods": "POST",
                 "Access-Control-Allow-Headers": "X-Requested-With, Content-Type, Accept",
-                "x-now-cache": "HIT",
                 "cache-control": "max-age=31536000,public",
                 "Accept-Encoding": "br",
                 "Service-Worker-Allowed": "/"
