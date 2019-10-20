@@ -7,6 +7,7 @@ const typeDefs = gql`
 		getEditorBy(name: String): Editor!
 		getEditor: Editor!
 		getEditorWithBlogs(name: String): EditorWithBlog
+		getLanding: Landing!
 	}
 
 	type Image {
@@ -214,6 +215,12 @@ const typeDefs = gql`
 	type EditorWithBlog @cacheControl(maxAge: 86400) {
 		editor: Editor
 		blog: BlogsByEditor
+	}
+
+	type Landing {
+		popularity: Blog!
+		recent: Blog!
+		editors: Editor!
 	}
 `
 

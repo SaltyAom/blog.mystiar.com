@@ -1,0 +1,160 @@
+#carousel
+    position relative
+    display flex
+    flex-direction row
+    justify-content flex-start
+    align-items flex-start
+    width 100%
+    height auto
+    min-height 320px
+    overflow hidden
+
+    & > .progress
+        position absolute
+        display flex
+        width 280px
+        height 4px
+        left calc(50% - 140px)
+        bottom 33px
+
+        & > .bar
+            appearance none
+            -webkit-appearance none
+            -moz-appearance none
+            display block
+            flex 1
+            height inherit
+            margin 0 7px
+            border 0
+            background-color #fff
+            opacity .5
+            border-radius 2px
+            box-shadow 0 3px 6px rgba(0,0,0,.375)
+            outline none
+            transition opacity .25s ease-out
+            cursor pointer
+
+            &:hover,
+            &:focus
+                opacity .95
+
+            &.active
+                opacity 1
+
+#carousel-scroller
+    display flex
+    flex-direction row
+    justify-content flex-start
+    align-items flex-start
+    width 100%
+    height 100%
+    min-height inherit
+    margin 0
+    padding 20px 25px
+    overflow-x scroll
+    overflow-y hidden
+    scroll-snap-type x mandatory
+    -webkit-scroll-snap-type x mandatory
+    -ms-scroll-snap-type x mandatory
+    -webkit-overflow-scrolling touch
+    scrollbar-style transparent transparent
+
+    &::-webkit-scrollbar
+        display none
+
+    &.scrolling
+        scroll-snap-type unset
+        -webkit-scroll-snap-type unset
+        -ms-scroll-snap-type unset
+
+    &.preload
+        overflow hidden
+
+    & > .pane
+        position relative
+        z-index 0
+        display flex
+        flex 0 0 auto
+        flex-direction column
+        justify-content flex-end
+        align-items center
+        width 100%
+        height inherit
+        min-height 320px
+        margin 0 15px 0 0
+        padding 0 30px
+        background-size cover
+        background-position center
+        scroll-snap-align center
+        border-radius 8px
+        box-shadow  0 2px 6px alpha(#000, .325),
+                    0 4px 12px alpha(#000, .325)
+
+        & > .name
+            position relative
+            z-index 2
+            display block
+            width 100%
+            text-align center
+            line-height 1.618em
+            margin 0 0 32px 0
+            font-size 24px
+            text-shadow 0 2px 4px alpha(#000, .625)
+            color #fff
+            user-select none
+            -webkit-user-select none
+            cursor default
+
+            &.preload
+                width 240px
+                height 18px
+                background-color #ddd
+                border-radius 3px
+
+        & > .overlay
+            position absolute
+            z-index 1
+            display block
+            width 100%
+            height inherit
+            min-height inherit
+            background-color alpha(#000, .3)
+            border-radius inherit
+
+#carousel-end
+    display block
+    flex 0 0 auto
+    width 10px
+    height 1px
+    margin 0
+    padding 0
+    visibility hidden
+
+@media screen and (min-height 568px)
+    #carousel
+        height 65vh
+        max-height 560px
+
+@media screen and (min-width 568px) and (max-width 1023.9px)
+    #carousel-scroller
+        padding-left 15%
+        padding-right 15%
+
+        & > .pane
+            margin 0 30px 0 0
+
+    #carousel-end
+        width 15%
+
+@media screen and (min-width 1024px)
+    #carousel-scroller
+        width 100%
+        padding-left calc(50% - 405px)
+        padding-right calc(50% - 405px)
+
+        & > .pane
+            width 810px
+            margin 0 30px 0 0
+
+    #carousel-end
+        width 325px

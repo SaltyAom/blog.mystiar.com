@@ -1,0 +1,38 @@
+#editor-list
+    display grid
+    width 100%
+    grid-template-columns repeat(2, 1fr)
+
+.editor-badge
+    display inline-flex
+    flex-direction column
+    justify-content center
+    align-items center
+    width 100%
+    padding 20px
+    overflow hidden
+    border-radius 50%
+
+    &.preload
+        padding-top calc(100% - 60px)
+        background-color var(--preload)
+        border 20px solid var(--background)
+
+    & > .image
+        display block
+        width 100%
+        border-radius 50%
+        box-shadow  0 4px 6px alpha(#000, .0375),
+                    0 8px 12px alpha(#000, .0375)
+
+@media screen and (min-width 450px) and (max-width 567.9px)
+    #editor-list
+        grid-template-columns repeat(3, 1fr)
+
+@media screen and (min-width 568px) and (max-width 959.9px)
+    #editor-list
+        grid-template-columns repeat(4, 1fr)
+
+@media screen and (min-width 960px)
+    #editor-list
+        grid-template-columns repeat(5, 1fr)

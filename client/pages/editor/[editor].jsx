@@ -32,7 +32,7 @@ const Editor = ({ editorDetail }) => {
 		editorDetail.data.getEditorWithBlogs.blog.includes.Asset
 	)
 	editor = normalizeEditor(
-		editorDetail.data.getEditorWithBlogs.editor.items,
+		editorDetail.data.getEditorWithBlogs.editor.items[0],
 		assets
 	)
 	card = normalizeCard(

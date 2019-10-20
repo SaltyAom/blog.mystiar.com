@@ -37,7 +37,7 @@ const Blog = ({ blog, storyName }) => {
 
 	assets = normalizeAssets(blog.getBlogBy.includes.Asset)
 	metadata = normalizeMetadata(blog.getBlogBy.items[0])
-	editor = normalizeEditor(blog.getBlogBy.includes.Entry, assets)
+	editor = normalizeEditor(blog.getBlogBy.includes.Entry[0], assets)
 
 	let structureData = `
 		{

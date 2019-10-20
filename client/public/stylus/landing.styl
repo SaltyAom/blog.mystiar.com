@@ -1,51 +1,93 @@
+#mystiar-blog
+    display flex
+    flex-direction row
+    justify-content center
+    align-items center
+    width 100%
+    padding 15px
+    user-select none
+    -webkit-user-select none
+    -webkit-user-drag none
+
+    & > .icon
+        display inline-block
+        width 48px
+        margin-right 5px
+
+    & > .title
+        font-size 28px
+        color var(--tertiary-text)
+        font-weight normal
+
 #landing
+    display flex
+    flex-direction column
+    justify-content flex-start
+    align-content flex-start
+    width 100%
+
+    & > .header
+        display flex
+        flex-direction column
+        justify-content flex-end
+        align-items center
+        width 100%
+        min-height 330px
+        padding 30px 15px
+        background-size cover
+        background-position center
+
+#landing-body
+    display flex
+    flex-direction column
+    justify-content flex-start
+    align-items flex-start
+    width 100%
+    margin 0 auto
+    padding 15px 25px
+
+    & > .title
+        display block
+        color var(--primary-text)
+        font-size 40px
+        margin 50px 0 15px 0
+        padding 0 10px
+
+#recent
+    width 100%
+    display grid
+    grid-template-columns repeat(1, 1fr)
+    grid-gap 25px
+
+#footer
     display flex
     flex-direction column
     justify-content center
     align-items center
     width 100%
-    height 100vh
-
-#san-diego
-    width 300px
-    height 300px
-
-#title
-    color var(--primary-text)
-    font-size 36px
-    margin 0 0 10px 0
-
-#sub-title
+    padding 50px 0
     color var(--tertiary-text)
-    font-size 16px
-    font-weight normal
-    margin 0 0 50px 0
-
-#detail
-    color var(--link)
     font-size 21px
-    font-weight normal
-    text-decoration none
-    margin 0
-    padding 3px 6px 
-    border-radius 3px
-    transition background-color .2s
 
-    &:hover,
-    &:focus
-        background-color var(--link-fade)
+@media screen and (min-width 568px) and (max-width 767.9px)
+    #landing-body
+        width 90%
 
-@media screen and (max-height 480px)
-    #san-diego
-        width 175px
-        height 175px
+    #recent
+        grid-template-columns repeat(2, 1fr)
+        grid-gap 0 15px
 
-    #title
-        font-size 32px
+@media screen and (min-width 768px) and (max-width 1023.9px)
+    #landing-body
+        display flex
+        width calc(80% - 30px)
 
-    #sub-title
-        font-size 14px
-        margin-bottom 20px
+    #recent
+        grid-template-columns repeat(2, 1fr)
 
-    #detail
-        font-size 18px
+@media screen and (min-width 1024px)
+    #landing-body
+        width 810px
+
+    #recent
+        grid-template-columns repeat(2, 1fr)

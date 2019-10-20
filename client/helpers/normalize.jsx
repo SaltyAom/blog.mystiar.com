@@ -73,10 +73,10 @@ export const normalizeMetadata = content => {
  */
 export const normalizeEditor = (editor, normalizedAssets) => {
 	let normalizedEditor = {
-		name: editor[0].fields.name,
-		bio: editor[0].fields.bio,
-		image: normalizedAssets[editor[0].fields.image.sys.id],
-		cover: typeof editor[0].fields.cover !== "undefined" ? normalizedAssets[editor[0].fields.cover.sys.id] : ""
+		name: editor.fields.name,
+		bio: editor.fields.bio,
+		image: normalizedAssets[editor.fields.image.sys.id],
+		cover: typeof editor.fields.cover !== "undefined" ? normalizedAssets[editor.fields.cover.sys.id] : ""
 	}
 	return normalizedEditor
 }
@@ -104,6 +104,30 @@ export const normalizeCard = (shallowBlogs, normalizedAssets) => {
 		})
 	})
 	return normalizedCard
+}
+
+export const createEditorKeys = (editors, normalizedEditors) => {
+	let editorKeys = []
+	editors.forEach((editor) => {
+		normalizedEditors.forEach((normalizedEditor) => {
+			if(editor.fields.name === normalizedEditor.name)
+				return editorKeys[editor.sys.id] = normalizedEditor
+		})
+		return
+	})
+	return editorKeys
+}
+
+export const normalizeLandingCard = (normalizedMetadata, normalizedAssets, editorKeys) => {
+	let normalizedLandingCard = []
+	normalizedMetadata.forEach((card) => {
+		normalizedLandingCard.push({
+			title: card.title,
+			thumbnail: normalizedAssets[card.thumbnail],
+			editor: editorKeys[card.editor]
+		})
+	})
+	return normalizedLandingCard
 }
 
 /**
@@ -140,7 +164,6 @@ export const renderNormalizedContent = (
 					>
 						<LazyLoadImage
 							className="story-image"
-							loading="lazy"
 							onClick={event => expandImage(event.target.src)}
 							src={
 								normalizedAssets[content.data.target.sys.id].url
@@ -270,7 +293,7 @@ export const renderCard = (normalizedCard) => {
 
 	normalizedCard.map((card) => {
 		return structure.push(
-			<Link href="/story/[story]" as={`/story/${card.title}`}>
+			<Link href="/story/[story]" as={`/story/${card.title}`} aria-label={`อ่าน ${card.title.replace(/-/g, " ")}`}>
 				<a className="story-more-card-link">
 					<article className="story-more-card">
 						<figure className="thumbnail">

@@ -27,7 +27,7 @@ class MystiarBlog extends RESTDataSource {
 		let editorID = editor.items[0].sys.id
 
 		let blogs = await this.get(
-			`${this.prefix}content_type=content&fields.editor.sys.id=${editorID}&order=-sys.createdAt`
+			`${this.prefix}content_type=content&fields.editor.sys.id=${editorID}&order=-sys.createdAt&limit=18`
 		)
 
 		return JSON.stringify(
@@ -48,6 +48,29 @@ class MystiarBlog extends RESTDataSource {
 			`${this.prefix}content_type=editor&fields.name=${name}`
 		)
 		return editor
+	}
+
+	async getLanding() {
+		let editors = await this.getEditor()
+		editors = JSON.parse(editors)
+
+		let popularity = await this.get(
+			`${this.prefix}content_type=content&order=sys.revision&limit=6`
+		)
+		popularity = JSON.parse(popularity)
+
+		let recent = await this.get(
+			`${this.prefix}content_type=content&order=-sys.createdAt&limit=6`
+		)
+		recent = JSON.parse(recent)
+
+		return JSON.stringify(
+			Object.assign({
+				popularity: popularity,
+				recent: recent,
+				editors: editors
+			})
+		)
 	}
 }
 

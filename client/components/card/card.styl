@@ -1,0 +1,78 @@
+.card-link
+    text-decoration none
+    outline none
+
+    &:hover,
+    &:focus
+        & > .card
+            & > .cover
+                & > .image
+                    transform scale(1.125) rotate(3deg)
+
+.card
+    display flex
+    flex-direction column
+    justify-content flex-start
+    align-items flex-start
+    width 100%
+    margin 0
+    padding 0 10px 8px 10px
+    outline none
+    cursor pointer
+    overflow hidden
+
+    & > .cover
+        display block
+        width 100%
+        margin 0
+        border-radius 4px
+        overflow hidden
+        box-shadow  0 2px 4px alpha(#000, .125),
+                    0 4px 8px alpha(#000, .125)
+
+        & > .image
+            display block
+            width 100%
+            border-radius inherit
+            object-fit cover
+            object-position center
+            transition transform 4s ease-out
+
+        & > .lazy-load-image
+            display block
+            width 100%
+            padding-top 62.5%
+            background-color var(--preload)
+
+    & > .title
+        display block
+        width 100%
+        margin 20px 0
+        color var(--secondary-text)
+        font-size 28px
+
+        &.preload
+            width 80%
+            height 24px
+            background-color var(--preload)
+            border-radius 4px
+
+    & > .footer
+        display flex
+        flex-direction row
+        justify-content flex-start
+        align-items flex-start
+        width 100%
+
+        & > .editor
+            display block
+            width 100%
+            margin 0
+            font-size 18px
+            color var(--tertiary-text)
+
+            &.preload
+                width 50%
+                height 18px
+                background-color var(--preload)
+                border-radius 4px

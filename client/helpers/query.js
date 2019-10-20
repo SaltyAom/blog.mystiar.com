@@ -178,3 +178,110 @@ export const getEditorWithBlogs = gql`
 		}
 	}
 `
+
+export const getLanding = gql`
+	query getLanding {
+		getLanding {
+			editors {
+				items {
+					sys {
+						id
+					}
+					fields {
+						name
+						image {
+							sys {
+								id
+							}
+						}
+						bio
+					}
+				}
+				includes {
+					Asset {
+						sys {
+							id
+						}
+						fields {
+							title
+							description
+							file {
+								url
+							}
+						}
+					}
+				}
+			}
+			popularity {
+				items {
+					fields {
+						title
+						tags
+						editor {
+							sys {
+								id
+							}
+						}
+						thumbnail {
+							sys {
+								id
+							}
+						}
+					}
+					sys {
+						createdAt
+						updatedAt
+					}
+				}
+				includes {
+					Asset {
+						sys {
+							id
+						}
+						fields {
+							file {
+								url
+							}
+							description
+						}
+					}
+				}
+			}
+			recent {
+				items {
+					fields {
+						title
+						tags
+						editor {
+							sys {
+								id
+							}
+						}
+						thumbnail {
+							sys {
+								id
+							}
+						}
+					}
+					sys {
+						createdAt
+						updatedAt
+					}
+				}
+				includes {
+					Asset {
+						sys {
+							id
+						}
+						fields {
+							file {
+								url
+							}
+							description
+						}
+					}
+				}
+			}
+		}
+	}
+`

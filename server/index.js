@@ -39,7 +39,6 @@ app.use(compression())
 
 /* Apollo */
 const { ApolloServer } = require("apollo-server-express")
-const { MemcachedCache } = require("apollo-server-cache-memcached")
 const responseCachePlugin = require("apollo-server-plugin-response-cache")
 
 /* Apollo config */
@@ -55,12 +54,6 @@ const server = new ApolloServer({
 	dataSources: () => ({
 		MystiarBlog: new MystiarBlog()
 	}),
-	persistedQueries: {
-		cache: new MemcachedCache(
-			["memcached-server-1", "memcached-server-2", "memcached-server-3"],
-			{ retries: 10, retry: 10000 }
-		)
-	},
 	engine: {
 		apiKey: "service:Mystiar-Gateway:p771Ho3LeZcci4hRUWJDDA"
 	},
