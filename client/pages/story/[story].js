@@ -161,7 +161,7 @@ const Blog = ({ blog, storyName }) => {
 								showFocusedImage(event.target.src)
 							}
 						/>
-						<div className="thumbnail-edge" />
+						<div id="thumbnail-edge" />
 					</figure>
 
 					{/* Visible on small device */}

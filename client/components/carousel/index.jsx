@@ -1,6 +1,6 @@
 import { useState, useEffect } from "react"
 
-import { useRouter } from "next/router"
+import Link from "next/link"
 
 import "./carousel.styl"
 
@@ -26,34 +26,32 @@ const Carousel = ({ data = [], preload = false }) => {
 			</header>
 		)
 
-	let [currentPane, setCurrentPane] = useState(0)
-
-	let router = useRouter()
-
-	useEffect(() => {
-		router.prefetch("/story/[story]")
-	}, [])
+	let [currentPane, setCurrentPane] = useState(0),
+		[isDragged, setDragged] = useState(false)
 
 	const handleCarouselDrag = event => {
 		let dragStart = event.screenX,
 			carousel = document.getElementById("carousel-scroller"),
 			carouselPosition = carousel.scrollLeft,
 			dragLeft = false,
-			dragged = false,
-			routerHandler = router
+			isTouched = false
 
 		carousel.classList.add("scrolling")
+
+		carousel.ontouchstart = () => isTouched = true
 
 		carousel.onmousemove = event => {
 			let dragDifferent = (event.screenX - dragStart) * -1
 
-			carousel.scrollTo({
-				top: 0,
-				left: carouselPosition + dragDifferent
-			})
+			if(!isTouched)
+				carousel.scrollTo({
+					top: 0,
+					left: carouselPosition + dragDifferent
+				})
 
 			dragLeft = dragDifferent < 0 ? true : false
-			dragged = true
+
+			if(!isDragged) setDragged(true)
 		}
 
 		/* Cleanup */
@@ -61,24 +59,14 @@ const Carousel = ({ data = [], preload = false }) => {
 			carousel.classList.remove("scrolling")
 			carousel.onmousemove = null
 
-			if (!dragged) {
-				let currentPane = Math.round(
-						carousel.scrollLeft / window.innerWidth
-					),
-					storyName = document
-						.getElementById(`carousel-${currentPane}`)
-						.getAttribute("carousel-name")
-
-				routerHandler.push(`/story/${storyName}`)
-			}
-
-			carousel.scrollTo({
-				top: 0,
-				left: dragLeft
-					? carousel.scrollLeft - window.innerWidth / 2.25
-					: carousel.scrollLeft + window.innerWidth / 2.25,
-				behavior: "smooth"
-			})
+			if(!isTouched)
+				carousel.scrollTo({
+					top: 0,
+					left: dragLeft
+						? carousel.scrollLeft - window.innerWidth / 2.25
+						: carousel.scrollLeft + window.innerWidth / 2.25,
+					behavior: "smooth"
+				})
 		}
 	}
 
@@ -100,6 +88,12 @@ const Carousel = ({ data = [], preload = false }) => {
 		})
 	}
 
+	const viewStory = (event) => {
+		if(!isDragged) return null
+		event.preventDefault()
+		setDragged(false)
+	}
+
 	return (
 		<header id="carousel">
 			<div
@@ -108,17 +102,19 @@ const Carousel = ({ data = [], preload = false }) => {
 				onMouseDown={event => handleCarouselDrag(event)}
 			>
 				{data.map((pane, index) => (
-					<div
-						id={`carousel-${index}`}
-						className="pane"
-						style={{
-							backgroundImage: `url(${pane.thumbnail.url})`
-						}}
-						carousel-name={pane.title}
-					>
-						<h3 className="name">{pane.title}</h3>
-						<div className="overlay" />
-					</div>
+					<Link href="/story/[story]" as={`/story/${pane.title}`}>
+						<a
+							id={`carousel-${index}`}
+							className="pane"
+							onClick={(event) => viewStory(event)}
+							style={{
+								backgroundImage: `url(${pane.thumbnail.url})`
+							}}
+						>
+							<h3 className="name">{pane.title}</h3>
+							<div className="overlay" />
+						</a>
+					</Link>
 				))}
 				<div id="carousel-end" />
 			</div>

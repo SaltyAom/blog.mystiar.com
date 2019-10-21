@@ -1,6 +1,7 @@
 import { Fragment } from "react"
 
 import App from "next/app"
+import Head from "next/head"
 
 import { ApolloProvider } from "@apollo/react-hooks"
 import withApollo from "helpers/withApollo"
@@ -32,11 +33,16 @@ class MyApp extends App {
 				)
 			})
 		}
+
 		if (!isServer && !window.GA_INITIALIZED) {
 			initGA()
 			window.GA_INITIALIZED = true
 		}
 		logPageView()
+
+		if (!isServer) {
+			document.addEventListener("touchstart", () => null, true)
+		}
 	}
 
 	render() {
@@ -44,6 +50,12 @@ class MyApp extends App {
 
 		return (
 			<Fragment>
+				<Head>
+					<meta
+						name="viewport"
+						content="width=device-width, viewport-fit=cover"
+					/>
+				</Head>
 				<NProgress color="#007aff" spinner={false} />
 				<ApolloProvider client={apollo}>
 					<ReduxProvider store={store}>

@@ -65,6 +65,21 @@ const AdditionalFooter = ({ tags = [], title = "", preload = false }) => {
 			</div>
 		)
 
+	let nativeShare = event => {
+		if (!navigator.share) return event
+		event.preventDefault()
+
+		navigator.share({
+			title: title,
+			url: `https://blog.mystiar.com/story/${title.replace(/ /g,"-")}`
+		})
+	}
+
+	let shareOnFacebookURL = `https://www.facebook.com/sharer/sharer.php?u=https://blog.mystiar.com/story/${title}`,
+		shareOnTwitterURL = `https://twitter.com/intent/tweet?url=https://blog.mystiar.com/story/${encodeURI(
+			title
+		)}`
+
 	return (
 		<div id="additional-footer">
 			<Tags tags={tags} preload={preload} />
@@ -74,7 +89,8 @@ const AdditionalFooter = ({ tags = [], title = "", preload = false }) => {
 					className="share-link"
 					target="_blank"
 					rel="noopener noreferrerf"
-					href={`https://www.facebook.com/sharer/sharer.php?u=https://blog.mystiar.com/story/${title}`}
+					href={shareOnFacebookURL}
+					onClick={event => nativeShare(event)}
 				>
 					<svg className="share-icon">
 						<path
@@ -88,9 +104,8 @@ const AdditionalFooter = ({ tags = [], title = "", preload = false }) => {
 					className="share-link twitter-share-button"
 					target="_blank"
 					rel="noopener noreferrerf"
-					href={`https://twitter.com/intent/tweet?url=https://blog.mystiar.com/story/${encodeURI(
-						title
-					)}`}
+					href={shareOnTwitterURL}
+					onClick={event => nativeShare(event)}
 				>
 					<svg className="share-icon">
 						<path

@@ -34,7 +34,7 @@ const Index = ({ landingData }) => {
 					Developed by developer who like to create silly things and
 					write down useful thing about software development.
 				</Description>
-				<SEOImage href="/assets/cover.png" alt="Mystiar Blog" />
+				<SEOImage href="https://blog.mystiar.com/assets/cover.png" alt="Mystiar Blog" />
 				<Head>
 					<title>
 						Mystiar Blog - Blog of developer who like to create
@@ -114,7 +114,7 @@ const Index = ({ landingData }) => {
 				Developed by developer who like to create silly things and write
 				down useful thing about software development.
 			</Description>
-			<SEOImage href="/assets/cover.png" alt="Mystiar Blog" />
+			<SEOImage href="https://blog.mystiar.com/assets/cover.png" alt="Mystiar Blog" />
 			<Head>
 				<title>
 					Mystiar Blog - Blog of developer who like to create silly

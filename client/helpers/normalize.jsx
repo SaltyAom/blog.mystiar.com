@@ -1,6 +1,6 @@
 import { Fragment } from "react"
 
-import Link from 'next/link'
+import Link from "next/link"
 
 import { LazyLoadImage } from "react-lazy-load-image-component"
 
@@ -60,7 +60,7 @@ export const normalizeMetadata = content => {
 /**
  * @typedef {Object} normalizedEditor
  * @property {String} name - Editor's name.
- * @property {String} bio - Editor's short biological data. 
+ * @property {String} bio - Editor's short biological data.
  * @property {normalizedAssets} image - Editor's image data.
  * @property {normalizedAssets} cover - Editor's cover image data.
  */
@@ -76,7 +76,10 @@ export const normalizeEditor = (editor, normalizedAssets) => {
 		name: editor.fields.name,
 		bio: editor.fields.bio,
 		image: normalizedAssets[editor.fields.image.sys.id],
-		cover: typeof editor.fields.cover !== "undefined" ? normalizedAssets[editor.fields.cover.sys.id] : ""
+		cover:
+			typeof editor.fields.cover !== "undefined"
+				? normalizedAssets[editor.fields.cover.sys.id]
+				: ""
 	}
 	return normalizedEditor
 }
@@ -96,7 +99,7 @@ export const normalizeEditor = (editor, normalizedAssets) => {
  */
 export const normalizeCard = (shallowBlogs, normalizedAssets) => {
 	let normalizedCard = []
-	shallowBlogs.forEach((shallowBlog) => {
+	shallowBlogs.forEach(shallowBlog => {
 		normalizedCard.push({
 			title: shallowBlog.fields.title.replace(/ /g, "-"),
 			thumbnail: normalizedAssets[shallowBlog.fields.thumbnail.sys.id],
@@ -108,19 +111,23 @@ export const normalizeCard = (shallowBlogs, normalizedAssets) => {
 
 export const createEditorKeys = (editors, normalizedEditors) => {
 	let editorKeys = []
-	editors.forEach((editor) => {
-		normalizedEditors.forEach((normalizedEditor) => {
-			if(editor.fields.name === normalizedEditor.name)
-				return editorKeys[editor.sys.id] = normalizedEditor
+	editors.forEach(editor => {
+		normalizedEditors.forEach(normalizedEditor => {
+			if (editor.fields.name === normalizedEditor.name)
+				return (editorKeys[editor.sys.id] = normalizedEditor)
 		})
 		return
 	})
 	return editorKeys
 }
 
-export const normalizeLandingCard = (normalizedMetadata, normalizedAssets, editorKeys) => {
+export const normalizeLandingCard = (
+	normalizedMetadata,
+	normalizedAssets,
+	editorKeys
+) => {
 	let normalizedLandingCard = []
-	normalizedMetadata.forEach((card) => {
+	normalizedMetadata.forEach(card => {
 		normalizedLandingCard.push({
 			title: card.title,
 			thumbnail: normalizedAssets[card.thumbnail],
@@ -200,7 +207,9 @@ export const renderNormalizedContent = (
 					})
 
 					return unorderedLists.push(
-						<li className="story-list" key={randomKey()}>{lists}</li>
+						<li className="story-list" key={randomKey()}>
+							{lists}
+						</li>
 					)
 				})
 				return structure.push(
@@ -226,7 +235,9 @@ export const renderNormalizedContent = (
 					})
 
 					return orderedLists.push(
-						<li className="story-list" key={randomKey()}>{lists}</li>
+						<li className="story-list" key={randomKey()}>
+							{lists}
+						</li>
 					)
 				})
 				return structure.push(
@@ -288,12 +299,16 @@ export const renderNormalizedContent = (
  * @param {*} normalizedCard - normalizedCard from normalizedCard().
  * @return {React.Component} - Set of Preview cards maximum to 100.
  */
-export const renderCard = (normalizedCard) => {
+export const renderCard = normalizedCard => {
 	let structure = []
 
-	normalizedCard.map((card) => {
+	normalizedCard.map(card => {
 		return structure.push(
-			<Link href="/story/[story]" as={`/story/${card.title}`} aria-label={`อ่าน ${card.title.replace(/-/g, " ")}`}>
+			<Link
+				href="/story/[story]"
+				as={`/story/${card.title}`}
+				aria-label={`อ่าน ${card.title.replace(/-/g, " ")}`}
+			>
 				<a className="story-more-card-link">
 					<article className="story-more-card">
 						<figure className="thumbnail">
@@ -303,8 +318,10 @@ export const renderCard = (normalizedCard) => {
 								alt={card.thumbnail.alt}
 							/>
 						</figure>
-						<h3 className="title">{card.title.replace(/-/g," ")}</h3>
-						<Tags tags={card.tags} />
+						<h3 className="title">
+							{card.title.replace(/-/g, " ")}
+						</h3>
+						{/* <Tags tags={card.tags} /> */}
 					</article>
 				</a>
 			</Link>
@@ -336,10 +353,18 @@ const marksToReactComponent = (value, marks) => {
 
 	if (marks.length === 1) {
 		if (marks[0].type.includes("bold"))
-			return <b key={randomKey()} className="story-b">{value}</b>
+			return (
+				<b key={randomKey()} className="story-b">
+					{value}
+				</b>
+			)
 
 		if (marks[0].type.includes("code"))
-			return <code key={randomKey()} className="story-code">{value}</code>
+			return (
+				<div className="code-container" key={randomKey()}>
+					<code className="story-code">{value}</code>
+				</div>
+			)
 	}
 
 	if (marks.length === 2) {

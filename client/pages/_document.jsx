@@ -4,7 +4,7 @@ export default class MyDocument extends Document {
     render() {
         return (
             <html lang="th">
-                <Head >
+                <Head key={"_document.jsx"}>
                     <meta httpEquiv="content-type" content="text/html; charset=utf-8" />
                     <meta httpEquiv="X-UA-Compatible" content="IE=edge,chrome=1" />
                     <meta property="og:locale" content="th_TH" />

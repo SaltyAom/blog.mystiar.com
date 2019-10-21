@@ -33,7 +33,7 @@ dev
 
 app.use(bodyparser.json({limit: '5mb'}))
 app.use(cors(corsOptions))
-if(!dev) app.use(cache("6 hours"))
+if(dev) app.use(cache("6 hours"))
 app.use(queue({ activeLimit: 40, queuedLimit: -1 }))
 app.use(compression())
 
